@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>План рассадки | Свадебный ужин | Open Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ece6df;
+            background-image: radial-gradient(circle at 10% 20%, rgba(210, 190, 165, 0.15) 2%, transparent 2.5%),
+                              radial-gradient(circle at 80% 70%, rgba(150, 120, 90, 0.08) 1.5%, transparent 2%);
+            background-size: 40px 40px, 32px 32px;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem 1.5rem;
+            color: #2c221b;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #fffef7;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2f2a24;
+            padding: 1.6rem 2rem;
+            border-bottom: 4px solid #dbb87c;
+        }
+
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: -0.3px;
+            color: #fbf5e8;
+            margin-bottom: 0.3rem;
+        }
+
+        .header p {
+            color: #cdc2b2;
+            font-weight: 400;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #dbb87c20;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #e9d9bd;
+        }
+
+        .floorplan {
+            padding: 2rem 2rem 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .layout-three-col {
+            display: flex;
+            gap: 1.8rem;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        /* ЛЕВАЯ ЗОНА: ВХОД */
+        .left-entrance {
+            flex: 0 0 180px;
+            background: #f5ede3;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2d2bd;
+        }
+
+        .entrance-icon {
+            font-size: 3rem;
+            color: #aa8c64;
+            margin-bottom: 0.8rem;
+        }
+
+        .entrance-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #5f4a30;
+            margin-bottom: 0.3rem;
+            text-align: center;
+        }
+
+        .entrance-desc {
+            font-size: 0.7rem;
+            color: #8f7659;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* ПРАВАЯ ЗОНА: ФОТОЗОНА */
+        .right-photo {
+            flex: 0 0 200px;
+            background: #f7efe3;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2cfb5;
+            text-align: center;
+        }
+
+        .photo-icon {
+            font-size: 2.8rem;
+            color: #b8874a;
+            margin-bottom: 0.6rem;
+        }
+
+        .photo-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #5f4a30;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .photo-desc {
+            font-size: 0.7rem;
+            color: #8f7659;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .center-table {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .table-container {
+            background: #fef9ef;
+            border-radius: 2rem;
+            padding: 1.5rem 1rem;
+            box-shadow: inset 0 1px 4px #00000008, 0 12px 28px -8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ece0cf;
+        }
+
+        /* РЯДЫ — ИСПОЛЬЗУЕМ GRID ДЛЯ РАВНОМЕРНОГО ВЫРАВНИВАНИЯ */
+        .row {
+            display: grid;
+            grid-template-columns: repeat(9, minmax(0, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .seat {
+            background: #ffffff;
+            border-radius: 1.2rem;
+            padding: 0.7rem 0.3rem;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f0e3d4;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85px;
+            cursor: default;
+        }
+
+        /* подсказка только для текста роли — красивая кастомная */
+        .guest-role[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2f2a24;
+            color: #f7efdf;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.2px;
+            backdrop-filter: blur(2px);
+            border: 1px solid #dbb87c;
+            pointer-events: none;
+        }
+
+        /* для маленьких экранов, чтобы подсказка не вылезала за край */
+        @media (max-width: 640px) {
+            .guest-role[data-tooltip]:hover::after {
+                white-space: normal;
+                width: max-content;
+                max-width: 180px;
+                text-align: center;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        .guest-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2e241e;
+            display: block;
+            line-height: 1.3;
+            word-break: break-word;
+            max-width: 100%;
+            padding: 0 0.2rem;
+        }
+
+        .guest-name.long-name {
+            font-size: 0.7rem;
+        }
+
+        .guest-role {
+            font-size: 0.6rem;
+            color: #9b8a74;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            cursor: help;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* если роль слишком длинная, делаем многоточие и tooltip */
+        .guest-role.truncated {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 95%;
+            display: inline-block;
+        }
+
+        .seat.maybe-absent {
+            background: #fff8f0;
+            border: 1.5px dashed #d4a373;
+            opacity: 0.9;
+        }
+
+        .seat.maybe-absent::after {
+            content: "?";
+            position: absolute;
+            top: -8px;
+            right: -6px;
+            background: #d4a373;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            cursor: help;
+        }
+
+        /* подсказка для знака вопроса на уголке */
+        .seat.maybe-absent[data-absenthint]:hover::after {
+            content: attr(data-absenthint);
+            bottom: 110%;
+            right: 0;
+            left: auto;
+            transform: translateX(0);
+            background: #2f2a24;
+            color: #f7efdf;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1.5rem;
+            white-space: nowrap;
+            z-index: 101;
+            font-weight: 500;
+        }
+
+        .seat.couple {
+            background: linear-gradient(135deg, #fff8ed, #fff3e4);
+            border-left: 4px solid #dbb06b;
+            border-right: 4px solid #dbb06b;
+        }
+
+        .seat.couple .guest-name {
+            color: #aa7c4a;
+            font-weight: 800;
+        }
+
+        .table-wood {
+            background: #d9c8b2;
+            background-image: repeating-linear-gradient(90deg, #cbbca2 0px, #cbbca2 2px, #e1cfb4 2px, #e1cfb4 8px);
+            border-radius: 40px;
+            margin: 1.2rem 0;
+            padding: 0.7rem 0;
+            text-align: center;
+            box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.2);
+            border: 1px solid #b59f7e;
+        }
+
+        .table-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #3c2d1f;
+            background: #fef3e0aa;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .section-break {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 0.4rem 0 0.6rem;
+            font-size: 0.65rem;
+            color: #b59a73;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed #e2d2be;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            color: #4f3f30;
+        }
+
+        .legend-badge.couple {
+            width: 26px;
+            height: 12px;
+            background: linear-gradient(90deg, #fff3e4, #f7e5cf);
+            border-left: 2px solid #dbb06b;
+            border-right: 2px solid #dbb06b;
+            border-radius: 20px;
+        }
+
+        .legend-badge.maybe {
+            width: 26px;
+            height: 12px;
+            background: #fff8f0;
+            border: 1.5px dashed #d4a373;
+            border-radius: 20px;
+        }
+
+        .legend-badge.standard {
+            width: 26px;
+            height: 12px;
+            background: #ffffff;
+            border: 1px solid #e0cfbb;
+            border-radius: 20px;
+        }
+
+        .notes {
+            margin: 1rem 2rem 1.5rem 2rem;
+            background: #f7f1e7;
+            border-radius: 1.5rem;
+            padding: 1rem 1.8rem;
+            font-size: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .note-text {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            color: #5f4b33;
+        }
+
+        .note-text i {
+            margin-right: 6px;
+            color: #c6a36b;
+        }
+
+        .deco-badge {
+            background: #2f2a24;
+            color: #f0e2cf;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.7rem;
+        }
+
+        footer {
+            background: #f1ebe2;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: #8c775c;
+            border-top: 1px solid #e6dacb;
+        }
+
+        /* адаптация под планшеты и мобильные */
+        @media (max-width: 980px) {
+            .layout-three-col {
+                flex-direction: column;
+            }
+            .left-entrance, .right-photo {
+                flex: auto;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .entrance-icon, .photo-icon {
+                margin-bottom: 0;
+            }
+            .row {
+                gap: 0.5rem;
+            }
+            .guest-name {
+                font-size: 0.7rem;
+            }
+            .guest-name.long-name {
+                font-size: 0.6rem;
+            }
+            .guest-role {
+                font-size: 0.55rem;
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .seat {
+                padding: 0.4rem 0.2rem;
+                min-height: 70px;
+            }
+            .guest-name {
+                font-size: 0.6rem;
+            }
+            .guest-name.long-name {
+                font-size: 0.55rem;
+            }
+            .guest-role {
+                font-size: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-chalkboard-user" style="margin-right: 12px; color: #dbb87c;"></i> План рассадки · Свадебный ужин</h1>
+        <p>18 мест · Формат open kitchen (гости готовят с шефом) · Схема для декоратора <span class="badge"><i class="fas fa-utensils"></i> живая кухня</span></p>
+    </div>
+
+    <div class="floorplan">
+        <div class="layout-three-col">
+            <!-- ЛЕВАЯ ЗОНА: ВХОД -->
+            <div class="left-entrance">
+                <div class="entrance-icon"><i class="fas fa-door-open"></i></div>
+                <div>
+                    <div class="entrance-title"><i class="fas fa-arrow-left"></i> Вход в ресторан</div>
+                    <div class="entrance-desc">Главный вход гостей<br>➜ welcome zone</div>
+                </div>
+            </div>
+
+            <!-- ЦЕНТР: СТОЛ -->
+            <div class="center-table">
+                <div class="table-container">
+                    <div class="table-layout">
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <span style="font-size: 0.75rem; background: #e8dfd1; padding: 3px 14px; border-radius: 30px;"><i class="fas fa-arrow-up"></i> Верхняя сторона</span>
+                        </div>
+                        <div class="row" id="top-row"></div>
+
+                        <div class="table-wood">
+                            <div class="table-label"><i class="fas fa-utensils"></i> Длинный стол · 3 секции</div>
+                            <div class="section-break">
+                                <span>⎯ секция 1 ⎯</span>
+                                <span>⎯ секция 2 ⎯</span>
+                                <span>⎯ секция 3 ⎯</span>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 6px; margin-top: 6px;">
+                            <span style="font-size: 0.75rem; background: #e8dfd1; padding: 3px 14px; border-radius: 30px;"><i class="fas fa-arrow-down"></i> Нижняя сторона</span>
+                        </div>
+                        <div class="row" id="bottom-row"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ ЗОНА: ФОТОЗОНА (отцентрировано слово) -->
+            <div class="right-photo">
+                <div class="photo-icon"><i class="fas fa-camera-retro"></i> <i class="fas fa-camera"></i></div>
+                <div style="width: 100%; text-align: center;">
+                    <div class="photo-title">ФОТОЗОНА</div>
+                    <div class="photo-desc">декор по дизайн-проекту невесты<br>индивидуальное оформление</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- легенда -->
+        <div class="legend">
+            <div class="legend-item"><div class="legend-badge couple"></div> <span>Жених & Невеста</span></div>
+            <div class="legend-item"><div class="legend-badge maybe"></div> <span><i class="fas fa-question-circle"></i> Могут не прийти (готовить резерв)</span></div>
+            <div class="legend-item"><div class="legend-badge standard"></div> <span>Остальные гости</span></div>
+            <div class="legend-item"><i class="fas fa-utensils"></i> <span>Open kitchen — слева от стола</span></div>
+        </div>
+    </div>
+
+    <div class="notes">
+        <div class="note-text">
+            <span><i class="fas fa-calendar-day"></i> <strong>Декоратору:</strong> следующие гости могут отсутствовать — просьба быть готовой к гибкой сервировке</span>
+        </div>
+        <div class="deco-badge"><i class="fas fa-pencil-alt"></i> резерв мест: Галина Михайловна, Нина Васильевна, Зуля, мама жениха, Гоша</div>
+    </div>
+    <footer>
+        <i class="fas fa-heart"></i> План рассадки для декоратора — формат open kitchen, фотозона оформляется по согласованию с невестой
+    </footer>
+</div>
+
+<script>
+    // Данные с учетом изменений:
+    // Гоша тоже может не прийти (maybeAbsent: true)
+    const topSeats = [
+        { name: "Яна", role: "гостья", maybeAbsent: false, special: false },
+        { name: "Сергей", role: "гость", maybeAbsent: false, special: false },
+        { name: "Мама жениха", role: "мама", maybeAbsent: true, special: false },
+        { name: "ЖЕНИХ", role: "жених", maybeAbsent: false, special: "couple" },
+        { name: "НЕВЕСТА", role: "невеста", maybeAbsent: false, special: "couple" },
+        { name: "Мама невесты", role: "мама", maybeAbsent: false, special: false },
+        { name: "Отец", role: "отец", maybeAbsent: false, special: false },
+        { name: "Галина Михайловна", role: "бабушка", maybeAbsent: true, special: false },
+        { name: "Нина Васильевна", role: "бабушка", maybeAbsent: true, special: false }
+    ];
+
+    const bottomSeats = [
+        { name: "Зуля", role: "гостья", maybeAbsent: true, special: false },
+        { name: "Гоша", role: "гость", maybeAbsent: true, special: false },
+        { name: "Данис", role: "гость", maybeAbsent: false, special: false },
+        { name: "Кристина", role: "гостья", maybeAbsent: false, special: false },
+        { name: "Алёна", role: "гостья", maybeAbsent: false, special: false },
+        { name: "Саша", role: "гость", maybeAbsent: false, special: false },
+        { name: "Никита", role: "гость", maybeAbsent: false, special: false },
+        { name: "Катя", role: "гостья", maybeAbsent: false, special: false },
+        { name: "Айгуль", role: "гостья", maybeAbsent: false, special: false }
+    ];
+
+    // функция для проверки длинного имени
+    function isLongName(name) {
+        return name.length > 12 || (name.includes(' ') && name.length > 10);
+    }
+
+    function getSeatClass(seat) {
+        let cls = "seat";
+        if (seat.special === "couple") cls += " couple";
+        if (seat.maybeAbsent) cls += " maybe-absent";
+        return cls;
+    }
+
+    function renderRow(seatsArray, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = "";
+        seatsArray.forEach((guest, idx) => {
+            const seatDiv = document.createElement("div");
+            seatDiv.className = getSeatClass(guest);
+            
+            // Добавляем подсказку для знака вопроса на уголке (только для maybeAbsent)
+            if (guest.maybeAbsent) {
+                const fullHint = `${guest.name} — возможно, не придёт. Рекомендуем резерв.`;
+                seatDiv.setAttribute("data-absenthint", fullHint);
+            }
+            
+            const numberSpan = document.createElement("span");
+            numberSpan.style.fontSize = "0.55rem";
+            numberSpan.style.display = "block";
+            numberSpan.style.color = "#bfaa8a";
+            numberSpan.style.marginBottom = "2px";
+            numberSpan.innerText = `#${idx+1}`;
+            
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "guest-name";
+            if (isLongName(guest.name)) {
+                nameSpan.classList.add("long-name");
+            }
+            nameSpan.innerText = guest.name;
+            
+            const roleSpan = document.createElement("span");
+            roleSpan.className = "guest-role";
+            
+            // Формируем контент роли и tooltip ТОЛЬКО для текста роли
+            if (guest.special === "couple") {
+                roleSpan.innerHTML = `<i class="fas fa-heart" style="font-size: 0.55rem;"></i> ` + (guest.name === "ЖЕНИХ" ? "жених" : "невеста");
+                roleSpan.setAttribute("data-tooltip", `${guest.name} — главные гости вечера`);
+                roleSpan.style.cursor = "help";
+            } 
+            else if (guest.maybeAbsent) {
+                roleSpan.innerHTML = `<i class="fas fa-question-circle"></i> возможно, не придёт`;
+                roleSpan.setAttribute("data-tooltip", `${guest.name} — возможно, не придёт. Пожалуйста, предусмотрите гибкую сервировку.`);
+                roleSpan.style.cursor = "help";
+            } 
+            else {
+                roleSpan.innerText = guest.role;
+                if (guest.role && guest.role.length > 12) {
+                    roleSpan.classList.add("truncated");
+                }
+                roleSpan.setAttribute("data-tooltip", `${guest.name}, ${guest.role}`);
+                roleSpan.style.cursor = "help";
+            }
+            
+            seatDiv.appendChild(numberSpan);
+            seatDiv.appendChild(nameSpan);
+            seatDiv.appendChild(roleSpan);
+            container.appendChild(seatDiv);
+        });
+    }
+
+    renderRow(topSeats, "top-row");
+    renderRow(bottomSeats, "bottom-row");
+</script>
+
+<!-- дополнительный блок для декоратора -->
+<div style="max-width: 1600px; margin: 0 auto 1rem; padding: 0 2rem;">
+    <div style="background: #fffaf2; border-radius: 1rem; padding: 0.8rem 1.2rem; border-left: 4px solid #d4a373; font-size: 0.75rem; color: #5e4b36;">
+        <i class="fas fa-info-circle" style="margin-right: 8px; color: #c28a4b;"></i> 
+        <strong>Декоратору:</strong> в плане отмечены гости, которые могут не прийти (Галина Михайловна, Нина Васильевна, Зуля, мама жениха, <strong>Гоша</strong>). 
+        При наведении курсора на значок "?" или текст "возможно, не придёт" появляется полная всплывающая подсказка в элегантном стиле. 
+        При наведении на остальные строки с ролью гостя также появляется подсказка с именем и ролью.
+        Стол накрывается единой скатертью, стыки секций скрыты. Фотозона оформляется по дизайн-проекту невесты. 
+        Open kitchen находится слева от стола (зона входа) — гости будут подходить к кулинарной станции. Стулья расставить строго по схеме.
+    </div>
+</div>
+</body>
+</html>
