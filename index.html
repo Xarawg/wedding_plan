@@ -29,7 +29,7 @@
             background: #fffef7;
             border-radius: 2rem;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.03);
-            overflow: hidden;
+            overflow: visible; /* Изменено с hidden на visible, чтобы тултипы не обрезались */
         }
 
         .header {
@@ -70,6 +70,8 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            position: relative;
+            overflow: visible; /* Обеспечиваем видимость тултипов */
         }
 
         .layout-three-col {
@@ -77,6 +79,7 @@
             gap: 1.8rem;
             align-items: stretch;
             flex-wrap: wrap;
+            overflow: visible;
         }
 
         /* ЛЕВАЯ ЗОНА: ВХОД */
@@ -155,6 +158,7 @@
         .center-table {
             flex: 1;
             min-width: 280px;
+            overflow: visible;
         }
 
         .table-container {
@@ -163,6 +167,8 @@
             padding: 1.5rem 1rem;
             box-shadow: inset 0 1px 4px #00000008, 0 12px 28px -8px rgba(0, 0, 0, 0.1);
             border: 1px solid #ece0cf;
+            overflow: visible;
+            position: relative;
         }
 
         /* РЯДЫ — ИСПОЛЬЗУЕМ GRID ДЛЯ РАВНОМЕРНОГО ВЫРАВНИВАНИЯ */
@@ -171,6 +177,7 @@
             grid-template-columns: repeat(9, minmax(0, 1fr));
             gap: 0.75rem;
             width: 100%;
+            overflow: visible;
         }
 
         .seat {
@@ -188,42 +195,120 @@
             justify-content: center;
             min-height: 85px;
             cursor: default;
+            overflow: visible; /* Важно для тултипов внутри */
         }
 
-        /* подсказка только для текста роли — красивая кастомная */
+        /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: тултип теперь всегда видимый, не прозрачный и не обрезается */
+        .guest-role[data-tooltip] {
+            position: relative;
+            cursor: help;
+            display: inline-block;
+        }
+        
         .guest-role[data-tooltip]:hover::after {
             content: attr(data-tooltip);
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed; /* Используем fixed, чтобы тултип всегда был поверх всех элементов и не обрезался */
             background: #2f2a24;
             color: #f7efdf;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            padding: 0.4rem 0.9rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 2rem;
             white-space: nowrap;
-            z-index: 100;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+            z-index: 10000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25), 0 2px 5px rgba(0,0,0,0.1);
             font-family: 'Inter', sans-serif;
-            letter-spacing: 0.2px;
-            backdrop-filter: blur(2px);
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(0px);
             border: 1px solid #dbb87c;
             pointer-events: none;
+            left: var(--tooltip-left, auto);
+            top: var(--tooltip-top, auto);
+            transform: translateX(-50%);
+            /* Делаем полностью непрозрачным */
+            opacity: 1;
+            visibility: visible;
+            /* Добавляем небольшую задержку для плавности */
+            transition: opacity 0.1s ease;
         }
-
-        /* для маленьких экранов, чтобы подсказка не вылезала за край */
+        
+        /* Для маленьких экранов делаем перенос текста */
         @media (max-width: 640px) {
             .guest-role[data-tooltip]:hover::after {
                 white-space: normal;
                 width: max-content;
-                max-width: 180px;
+                max-width: 260px;
                 text-align: center;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
+                line-height: 1.4;
+                padding: 0.5rem 1rem;
             }
+        }
+
+        /* Стили для тултипа на уголке maybe-absent (знак вопроса) */
+        .seat.maybe-absent {
+            position: relative;
+            background: #fff8f0;
+            border: 1.5px dashed #d4a373;
+            opacity: 0.9;
+        }
+
+        .seat.maybe-absent::after {
+            content: "?";
+            position: absolute;
+            top: -8px;
+            right: -6px;
+            background: #d4a373;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            cursor: help;
+            z-index: 5;
+        }
+        
+        /* Тултип для знака вопроса (maybe-absent) — исправлен, теперь видимый */
+        .seat.maybe-absent[data-absenthint]:hover::after {
+            content: attr(data-absenthint);
+            position: fixed;
+            background: #2f2a24;
+            color: #f7efdf;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            white-space: nowrap;
+            z-index: 10000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            font-family: 'Inter', sans-serif;
+            border: 1px solid #dbb87c;
+            pointer-events: none;
+            opacity: 1;
+            visibility: visible;
+            width: auto;
+            height: auto;
+            top: auto;
+            left: auto;
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 640px) {
+            .seat.maybe-absent[data-absenthint]:hover::after {
+                white-space: normal;
+                max-width: 260px;
+                text-align: center;
+                line-height: 1.4;
+            }
+        }
+        
+        /* Убираем стандартный псевдоэлемент для maybe-absent при ховере, чтобы не конфликтовал */
+        .seat.maybe-absent:hover::after {
+            /* Оставляем только для data-absenthint, но наш селектор выше переопределит */
         }
 
         .guest-name {
@@ -261,48 +346,6 @@
             text-overflow: ellipsis;
             max-width: 95%;
             display: inline-block;
-        }
-
-        .seat.maybe-absent {
-            background: #fff8f0;
-            border: 1.5px dashed #d4a373;
-            opacity: 0.9;
-        }
-
-        .seat.maybe-absent::after {
-            content: "?";
-            position: absolute;
-            top: -8px;
-            right: -6px;
-            background: #d4a373;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            width: 18px;
-            height: 18px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            cursor: help;
-        }
-
-        /* подсказка для знака вопроса на уголке */
-        .seat.maybe-absent[data-absenthint]:hover::after {
-            content: attr(data-absenthint);
-            bottom: 110%;
-            right: 0;
-            left: auto;
-            transform: translateX(0);
-            background: #2f2a24;
-            color: #f7efdf;
-            font-size: 0.7rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 1.5rem;
-            white-space: nowrap;
-            z-index: 101;
-            font-weight: 500;
         }
 
         .seat.couple {
@@ -478,6 +521,16 @@
                 font-size: 0.5rem;
             }
         }
+        
+        /* Дополнительный блок для декоратора — тоже overflow visible */
+        .decorator-note {
+            max-width: 1600px;
+            margin: 0 auto 1rem;
+            padding: 0 2rem;
+            overflow: visible;
+        }
+        
+        /* Исправление для фиксированных тултипов: добавляем обработку через JS для динамического позиционирования */
     </style>
 </head>
 <body>
@@ -592,6 +645,170 @@
         if (seat.maybeAbsent) cls += " maybe-absent";
         return cls;
     }
+    
+    // Функция для динамического позиционирования тултипов (фиксированное положение)
+    // Добавляем обработчики, чтобы тултип появлялся рядом с курсором, но не обрезался
+    function setupTooltips() {
+        // Находим все элементы с data-tooltip
+        const tooltipElements = document.querySelectorAll('.guest-role[data-tooltip]');
+        tooltipElements.forEach(el => {
+            el.addEventListener('mouseenter', function(e) {
+                const tooltipText = this.getAttribute('data-tooltip');
+                if (!tooltipText) return;
+                // Удаляем предыдущий динамический тултип, если есть
+                const existing = document.getElementById('dynamic-tooltip');
+                if (existing) existing.remove();
+                
+                // Создаем временный элемент для измерения
+                const fakeSpan = document.createElement('span');
+                fakeSpan.style.position = 'absolute';
+                fakeSpan.style.visibility = 'hidden';
+                fakeSpan.style.whiteSpace = 'nowrap';
+                fakeSpan.style.fontSize = '0.8rem';
+                fakeSpan.style.fontWeight = '500';
+                fakeSpan.style.padding = '0.6rem 1.2rem';
+                fakeSpan.style.fontFamily = "'Inter', sans-serif";
+                fakeSpan.innerText = tooltipText;
+                document.body.appendChild(fakeSpan);
+                const width = fakeSpan.offsetWidth;
+                const height = fakeSpan.offsetHeight;
+                document.body.removeChild(fakeSpan);
+                
+                // Получаем позицию элемента
+                const rect = this.getBoundingClientRect();
+                let left = rect.left + rect.width / 2;
+                let top = rect.top - height - 8;
+                
+                // Корректируем, чтобы не выходило за границы экрана
+                if (top < 8) {
+                    top = rect.bottom + 8;
+                }
+                if (left + width/2 > window.innerWidth - 10) {
+                    left = window.innerWidth - width/2 - 10;
+                }
+                if (left - width/2 < 10) {
+                    left = width/2 + 10;
+                }
+                
+                // Создаем тултип
+                const tooltip = document.createElement('div');
+                tooltip.id = 'dynamic-tooltip';
+                tooltip.innerText = tooltipText;
+                tooltip.style.position = 'fixed';
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+                tooltip.style.transform = 'translateX(-50%)';
+                tooltip.style.backgroundColor = '#2f2a24';
+                tooltip.style.color = '#f7efdf';
+                tooltip.style.fontSize = '0.8rem';
+                tooltip.style.fontWeight = '500';
+                tooltip.style.padding = '0.6rem 1.2rem';
+                tooltip.style.borderRadius = '2rem';
+                tooltip.style.whiteSpace = 'nowrap';
+                tooltip.style.zIndex = '10000';
+                tooltip.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
+                tooltip.style.fontFamily = "'Inter', sans-serif";
+                tooltip.style.border = '1px solid #dbb87c';
+                tooltip.style.pointerEvents = 'none';
+                tooltip.style.opacity = '1';
+                tooltip.style.backdropFilter = 'none';
+                document.body.appendChild(tooltip);
+                
+                // При маленьком экране разрешаем перенос
+                if (window.innerWidth <= 640) {
+                    tooltip.style.whiteSpace = 'normal';
+                    tooltip.style.maxWidth = '260px';
+                    tooltip.style.textAlign = 'center';
+                    tooltip.style.lineHeight = '1.4';
+                }
+                
+                this._tooltipElement = tooltip;
+            });
+            
+            el.addEventListener('mouseleave', function() {
+                if (this._tooltipElement) {
+                    this._tooltipElement.remove();
+                    this._tooltipElement = null;
+                }
+            });
+        });
+        
+        // Обработка для maybe-absent (знак вопроса)
+        const maybeElements = document.querySelectorAll('.seat.maybe-absent[data-absenthint]');
+        maybeElements.forEach(el => {
+            el.addEventListener('mouseenter', function(e) {
+                const hintText = this.getAttribute('data-absenthint');
+                if (!hintText) return;
+                const existing = document.getElementById('dynamic-maybe-tooltip');
+                if (existing) existing.remove();
+                
+                // Измеряем размер
+                const fakeSpan = document.createElement('span');
+                fakeSpan.style.position = 'absolute';
+                fakeSpan.style.visibility = 'hidden';
+                fakeSpan.style.whiteSpace = 'nowrap';
+                fakeSpan.style.fontSize = '0.8rem';
+                fakeSpan.style.fontWeight = '500';
+                fakeSpan.style.padding = '0.6rem 1.2rem';
+                fakeSpan.style.fontFamily = "'Inter', sans-serif";
+                fakeSpan.innerText = hintText;
+                document.body.appendChild(fakeSpan);
+                const width = fakeSpan.offsetWidth;
+                const height = fakeSpan.offsetHeight;
+                document.body.removeChild(fakeSpan);
+                
+                const rect = this.getBoundingClientRect();
+                let left = rect.left + rect.width / 2;
+                let top = rect.top - height - 8;
+                
+                if (top < 8) {
+                    top = rect.bottom + 8;
+                }
+                if (left + width/2 > window.innerWidth - 10) {
+                    left = window.innerWidth - width/2 - 10;
+                }
+                if (left - width/2 < 10) {
+                    left = width/2 + 10;
+                }
+                
+                const tooltip = document.createElement('div');
+                tooltip.id = 'dynamic-maybe-tooltip';
+                tooltip.innerText = hintText;
+                tooltip.style.position = 'fixed';
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+                tooltip.style.transform = 'translateX(-50%)';
+                tooltip.style.backgroundColor = '#2f2a24';
+                tooltip.style.color = '#f7efdf';
+                tooltip.style.fontSize = '0.8rem';
+                tooltip.style.fontWeight = '500';
+                tooltip.style.padding = '0.6rem 1.2rem';
+                tooltip.style.borderRadius = '2rem';
+                tooltip.style.whiteSpace = 'nowrap';
+                tooltip.style.zIndex = '10000';
+                tooltip.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
+                tooltip.style.fontFamily = "'Inter', sans-serif";
+                tooltip.style.border = '1px solid #dbb87c';
+                tooltip.style.pointerEvents = 'none';
+                document.body.appendChild(tooltip);
+                
+                if (window.innerWidth <= 640) {
+                    tooltip.style.whiteSpace = 'normal';
+                    tooltip.style.maxWidth = '260px';
+                    tooltip.style.textAlign = 'center';
+                }
+                
+                this._maybeTooltip = tooltip;
+            });
+            
+            el.addEventListener('mouseleave', function() {
+                if (this._maybeTooltip) {
+                    this._maybeTooltip.remove();
+                    this._maybeTooltip = null;
+                }
+            });
+        });
+    }
 
     function renderRow(seatsArray, containerId) {
         const container = document.getElementById(containerId);
@@ -649,6 +866,11 @@
             seatDiv.appendChild(roleSpan);
             container.appendChild(seatDiv);
         });
+        
+        // После рендеринга настраиваем тултипы
+        setTimeout(() => {
+            setupTooltips();
+        }, 50);
     }
 
     renderRow(topSeats, "top-row");
@@ -656,12 +878,13 @@
 </script>
 
 <!-- дополнительный блок для декоратора -->
-<div style="max-width: 1600px; margin: 0 auto 1rem; padding: 0 2rem;">
+<div class="decorator-note">
     <div style="background: #fffaf2; border-radius: 1rem; padding: 0.8rem 1.2rem; border-left: 4px solid #d4a373; font-size: 0.75rem; color: #5e4b36;">
         <i class="fas fa-info-circle" style="margin-right: 8px; color: #c28a4b;"></i> 
         <strong>Декоратору:</strong> в плане отмечены гости, которые могут не прийти (Галина Михайловна, Нина Васильевна, Зуля, мама жениха, <strong>Гоша</strong>). 
-        При наведении курсора на значок "?" или текст "возможно, не придёт" появляется полная всплывающая подсказка в элегантном стиле. 
+        При наведении на значок "?" или текст "возможно, не придёт" появляется полная всплывающая подсказка в элегантном стиле. 
         При наведении на остальные строки с ролью гостя также появляется подсказка с именем и ролью.
+        <strong>Исправлено:</strong> тултипы теперь полностью видимые, не обрезаются и не становятся прозрачными.
         Стол накрывается единой скатертью, стыки секций скрыты. Фотозона оформляется по дизайн-проекту невесты. 
         Open kitchen находится слева от стола (зона входа) — гости будут подходить к кулинарной станции. Стулья расставить строго по схеме.
     </div>
