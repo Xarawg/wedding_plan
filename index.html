@@ -29,7 +29,7 @@
             background: #fffef7;
             border-radius: 2rem;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.03);
-            overflow: visible; /* Изменено с hidden на visible, чтобы тултипы не обрезались */
+            overflow: visible;
         }
 
         .header {
@@ -71,7 +71,7 @@
             flex-direction: column;
             gap: 1.5rem;
             position: relative;
-            overflow: visible; /* Обеспечиваем видимость тултипов */
+            overflow: visible;
         }
 
         .layout-three-col {
@@ -82,7 +82,6 @@
             overflow: visible;
         }
 
-        /* ЛЕВАЯ ЗОНА: ВХОД */
         .left-entrance {
             flex: 0 0 180px;
             background: #f5ede3;
@@ -117,7 +116,6 @@
             line-height: 1.4;
         }
 
-        /* ПРАВАЯ ЗОНА: ФОТОЗОНА */
         .right-photo {
             flex: 0 0 200px;
             background: #f7efe3;
@@ -171,7 +169,6 @@
             position: relative;
         }
 
-        /* РЯДЫ — ИСПОЛЬЗУЕМ GRID ДЛЯ РАВНОМЕРНОГО ВЫРАВНИВАНИЯ */
         .row {
             display: grid;
             grid-template-columns: repeat(9, minmax(0, 1fr));
@@ -195,19 +192,18 @@
             justify-content: center;
             min-height: 85px;
             cursor: default;
-            overflow: visible; /* Важно для тултипов внутри */
+            overflow: visible;
         }
 
-        /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: тултип теперь всегда видимый, не прозрачный и не обрезается */
-        .guest-role[data-tooltip] {
+        /* Простой и надежный стиль тултипа — только CSS, без дублирования */
+        [data-tooltip] {
             position: relative;
             cursor: help;
-            display: inline-block;
         }
         
-        .guest-role[data-tooltip]:hover::after {
+        [data-tooltip]:hover::before {
             content: attr(data-tooltip);
-            position: fixed; /* Используем fixed, чтобы тултип всегда был поверх всех элементов и не обрезался */
+            position: fixed;
             background: #2f2a24;
             color: #f7efdf;
             font-size: 0.8rem;
@@ -216,37 +212,59 @@
             border-radius: 2rem;
             white-space: nowrap;
             z-index: 10000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25), 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
             font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-            backdrop-filter: blur(0px);
             border: 1px solid #dbb87c;
             pointer-events: none;
-            left: var(--tooltip-left, auto);
-            top: var(--tooltip-top, auto);
+            left: var(--x, 50%);
+            top: var(--y, 0);
             transform: translateX(-50%);
-            /* Делаем полностью непрозрачным */
-            opacity: 1;
-            visibility: visible;
-            /* Добавляем небольшую задержку для плавности */
             transition: opacity 0.1s ease;
         }
         
-        /* Для маленьких экранов делаем перенос текста */
         @media (max-width: 640px) {
-            .guest-role[data-tooltip]:hover::after {
+            [data-tooltip]:hover::before {
                 white-space: normal;
-                width: max-content;
                 max-width: 260px;
                 text-align: center;
                 line-height: 1.4;
-                padding: 0.5rem 1rem;
+            }
+        }
+        
+        /* Тултип для maybe-absent */
+        .maybe-absent {
+            position: relative;
+        }
+        
+        .maybe-absent[data-absenthint]:hover::before {
+            content: attr(data-absenthint);
+            position: fixed;
+            background: #2f2a24;
+            color: #f7efdf;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            white-space: nowrap;
+            z-index: 10000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            font-family: 'Inter', sans-serif;
+            border: 1px solid #dbb87c;
+            pointer-events: none;
+            left: var(--x, 50%);
+            top: var(--y, 0);
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 640px) {
+            .maybe-absent[data-absenthint]:hover::before {
+                white-space: normal;
+                max-width: 260px;
+                text-align: center;
             }
         }
 
-        /* Стили для тултипа на уголке maybe-absent (знак вопроса) */
         .seat.maybe-absent {
-            position: relative;
             background: #fff8f0;
             border: 1.5px dashed #d4a373;
             opacity: 0.9;
@@ -267,48 +285,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             cursor: help;
             z-index: 5;
-        }
-        
-        /* Тултип для знака вопроса (maybe-absent) — исправлен, теперь видимый */
-        .seat.maybe-absent[data-absenthint]:hover::after {
-            content: attr(data-absenthint);
-            position: fixed;
-            background: #2f2a24;
-            color: #f7efdf;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem;
-            white-space: nowrap;
-            z-index: 10000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-            font-family: 'Inter', sans-serif;
-            border: 1px solid #dbb87c;
-            pointer-events: none;
-            opacity: 1;
-            visibility: visible;
-            width: auto;
-            height: auto;
-            top: auto;
-            left: auto;
-            transform: translateX(-50%);
-        }
-        
-        @media (max-width: 640px) {
-            .seat.maybe-absent[data-absenthint]:hover::after {
-                white-space: normal;
-                max-width: 260px;
-                text-align: center;
-                line-height: 1.4;
-            }
-        }
-        
-        /* Убираем стандартный псевдоэлемент для maybe-absent при ховере, чтобы не конфликтовал */
-        .seat.maybe-absent:hover::after {
-            /* Оставляем только для data-absenthint, но наш селектор выше переопределит */
         }
 
         .guest-name {
@@ -339,7 +318,6 @@
             display: inline-block;
         }
 
-        /* если роль слишком длинная, делаем многоточие и tooltip */
         .guest-role.truncated {
             white-space: nowrap;
             overflow: hidden;
@@ -476,7 +454,6 @@
             border-top: 1px solid #e6dacb;
         }
 
-        /* адаптация под планшеты и мобильные */
         @media (max-width: 980px) {
             .layout-three-col {
                 flex-direction: column;
@@ -522,15 +499,12 @@
             }
         }
         
-        /* Дополнительный блок для декоратора — тоже overflow visible */
         .decorator-note {
             max-width: 1600px;
             margin: 0 auto 1rem;
             padding: 0 2rem;
             overflow: visible;
         }
-        
-        /* Исправление для фиксированных тултипов: добавляем обработку через JS для динамического позиционирования */
     </style>
 </head>
 <body>
@@ -542,7 +516,6 @@
 
     <div class="floorplan">
         <div class="layout-three-col">
-            <!-- ЛЕВАЯ ЗОНА: ВХОД -->
             <div class="left-entrance">
                 <div class="entrance-icon"><i class="fas fa-door-open"></i></div>
                 <div>
@@ -551,7 +524,6 @@
                 </div>
             </div>
 
-            <!-- ЦЕНТР: СТОЛ -->
             <div class="center-table">
                 <div class="table-container">
                     <div class="table-layout">
@@ -577,7 +549,6 @@
                 </div>
             </div>
 
-            <!-- ПРАВАЯ ЗОНА: ФОТОЗОНА (отцентрировано слово) -->
             <div class="right-photo">
                 <div class="photo-icon"><i class="fas fa-camera-retro"></i> <i class="fas fa-camera"></i></div>
                 <div style="width: 100%; text-align: center;">
@@ -587,7 +558,6 @@
             </div>
         </div>
 
-        <!-- легенда -->
         <div class="legend">
             <div class="legend-item"><div class="legend-badge couple"></div> <span>Жених & Невеста</span></div>
             <div class="legend-item"><div class="legend-badge maybe"></div> <span><i class="fas fa-question-circle"></i> Могут не прийти (готовить резерв)</span></div>
@@ -600,7 +570,7 @@
         <div class="note-text">
             <span><i class="fas fa-calendar-day"></i> <strong>Декоратору:</strong> следующие гости могут отсутствовать — просьба быть готовой к гибкой сервировке</span>
         </div>
-        <div class="deco-badge"><i class="fas fa-pencil-alt"></i> резерв мест: Галина Михайловна, Нина Васильевна, Зуля, мама жениха, Гоша</div>
+        <div class="deco-badge"><i class="fas fa-pencil-alt"></i> резерв мест: Галина Михайловна, Зуля, мама жениха, Гоша</div>
     </div>
     <footer>
         <i class="fas fa-heart"></i> План рассадки для декоратора — формат open kitchen, фотозона оформляется по согласованию с невестой
@@ -608,8 +578,7 @@
 </div>
 
 <script>
-    // Данные с учетом изменений:
-    // Гоша тоже может не прийти (maybeAbsent: true)
+    // Данные: Нина Васильевна теперь точно будет (maybeAbsent: false)
     const topSeats = [
         { name: "Яна", role: "гостья", maybeAbsent: false, special: false },
         { name: "Сергей", role: "гость", maybeAbsent: false, special: false },
@@ -619,7 +588,7 @@
         { name: "Мама невесты", role: "мама", maybeAbsent: false, special: false },
         { name: "Отец", role: "отец", maybeAbsent: false, special: false },
         { name: "Галина Михайловна", role: "бабушка", maybeAbsent: true, special: false },
-        { name: "Нина Васильевна", role: "бабушка", maybeAbsent: true, special: false }
+        { name: "Нина Васильевна", role: "бабушка", maybeAbsent: false, special: false }  // ТОЧНО БУДЕТ
     ];
 
     const bottomSeats = [
@@ -634,7 +603,6 @@
         { name: "Айгуль", role: "гостья", maybeAbsent: false, special: false }
     ];
 
-    // функция для проверки длинного имени
     function isLongName(name) {
         return name.length > 12 || (name.includes(' ') && name.length > 10);
     }
@@ -646,170 +614,129 @@
         return cls;
     }
     
-    // Функция для динамического позиционирования тултипов (фиксированное положение)
-    // Добавляем обработчики, чтобы тултип появлялся рядом с курсором, но не обрезался
-    function setupTooltips() {
-        // Находим все элементы с data-tooltip
-        const tooltipElements = document.querySelectorAll('.guest-role[data-tooltip]');
-        tooltipElements.forEach(el => {
-            el.addEventListener('mouseenter', function(e) {
-                const tooltipText = this.getAttribute('data-tooltip');
-                if (!tooltipText) return;
-                // Удаляем предыдущий динамический тултип, если есть
-                const existing = document.getElementById('dynamic-tooltip');
-                if (existing) existing.remove();
-                
-                // Создаем временный элемент для измерения
-                const fakeSpan = document.createElement('span');
-                fakeSpan.style.position = 'absolute';
-                fakeSpan.style.visibility = 'hidden';
-                fakeSpan.style.whiteSpace = 'nowrap';
-                fakeSpan.style.fontSize = '0.8rem';
-                fakeSpan.style.fontWeight = '500';
-                fakeSpan.style.padding = '0.6rem 1.2rem';
-                fakeSpan.style.fontFamily = "'Inter', sans-serif";
-                fakeSpan.innerText = tooltipText;
-                document.body.appendChild(fakeSpan);
-                const width = fakeSpan.offsetWidth;
-                const height = fakeSpan.offsetHeight;
-                document.body.removeChild(fakeSpan);
-                
-                // Получаем позицию элемента
-                const rect = this.getBoundingClientRect();
-                let left = rect.left + rect.width / 2;
-                let top = rect.top - height - 8;
-                
-                // Корректируем, чтобы не выходило за границы экрана
-                if (top < 8) {
-                    top = rect.bottom + 8;
-                }
-                if (left + width/2 > window.innerWidth - 10) {
-                    left = window.innerWidth - width/2 - 10;
-                }
-                if (left - width/2 < 10) {
-                    left = width/2 + 10;
-                }
-                
-                // Создаем тултип
-                const tooltip = document.createElement('div');
-                tooltip.id = 'dynamic-tooltip';
-                tooltip.innerText = tooltipText;
-                tooltip.style.position = 'fixed';
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
-                tooltip.style.transform = 'translateX(-50%)';
-                tooltip.style.backgroundColor = '#2f2a24';
-                tooltip.style.color = '#f7efdf';
-                tooltip.style.fontSize = '0.8rem';
-                tooltip.style.fontWeight = '500';
-                tooltip.style.padding = '0.6rem 1.2rem';
-                tooltip.style.borderRadius = '2rem';
-                tooltip.style.whiteSpace = 'nowrap';
-                tooltip.style.zIndex = '10000';
-                tooltip.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
-                tooltip.style.fontFamily = "'Inter', sans-serif";
-                tooltip.style.border = '1px solid #dbb87c';
-                tooltip.style.pointerEvents = 'none';
-                tooltip.style.opacity = '1';
-                tooltip.style.backdropFilter = 'none';
-                document.body.appendChild(tooltip);
-                
-                // При маленьком экране разрешаем перенос
-                if (window.innerWidth <= 640) {
-                    tooltip.style.whiteSpace = 'normal';
-                    tooltip.style.maxWidth = '260px';
-                    tooltip.style.textAlign = 'center';
-                    tooltip.style.lineHeight = '1.4';
-                }
-                
-                this._tooltipElement = tooltip;
-            });
-            
-            el.addEventListener('mouseleave', function() {
-                if (this._tooltipElement) {
-                    this._tooltipElement.remove();
-                    this._tooltipElement = null;
-                }
-            });
-        });
+    // Глобальный обработчик для позиционирования тултипов через mousemove
+    // Используем один обработчик на body, чтобы не было дублирования
+    let activeTooltipElement = null;
+    
+    function updateTooltipPosition(e) {
+        if (!activeTooltipElement) return;
+        // Получаем координаты мыши
+        const x = e.clientX;
+        const y = e.clientY;
+        // Находим элемент, на котором висит тултип
+        const target = activeTooltipElement;
         
-        // Обработка для maybe-absent (знак вопроса)
-        const maybeElements = document.querySelectorAll('.seat.maybe-absent[data-absenthint]');
-        maybeElements.forEach(el => {
-            el.addEventListener('mouseenter', function(e) {
-                const hintText = this.getAttribute('data-absenthint');
-                if (!hintText) return;
-                const existing = document.getElementById('dynamic-maybe-tooltip');
-                if (existing) existing.remove();
-                
-                // Измеряем размер
-                const fakeSpan = document.createElement('span');
-                fakeSpan.style.position = 'absolute';
-                fakeSpan.style.visibility = 'hidden';
-                fakeSpan.style.whiteSpace = 'nowrap';
-                fakeSpan.style.fontSize = '0.8rem';
-                fakeSpan.style.fontWeight = '500';
-                fakeSpan.style.padding = '0.6rem 1.2rem';
-                fakeSpan.style.fontFamily = "'Inter', sans-serif";
-                fakeSpan.innerText = hintText;
-                document.body.appendChild(fakeSpan);
-                const width = fakeSpan.offsetWidth;
-                const height = fakeSpan.offsetHeight;
-                document.body.removeChild(fakeSpan);
-                
-                const rect = this.getBoundingClientRect();
-                let left = rect.left + rect.width / 2;
-                let top = rect.top - height - 8;
-                
-                if (top < 8) {
-                    top = rect.bottom + 8;
-                }
-                if (left + width/2 > window.innerWidth - 10) {
-                    left = window.innerWidth - width/2 - 10;
-                }
-                if (left - width/2 < 10) {
-                    left = width/2 + 10;
-                }
-                
-                const tooltip = document.createElement('div');
-                tooltip.id = 'dynamic-maybe-tooltip';
-                tooltip.innerText = hintText;
-                tooltip.style.position = 'fixed';
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
-                tooltip.style.transform = 'translateX(-50%)';
-                tooltip.style.backgroundColor = '#2f2a24';
-                tooltip.style.color = '#f7efdf';
-                tooltip.style.fontSize = '0.8rem';
-                tooltip.style.fontWeight = '500';
-                tooltip.style.padding = '0.6rem 1.2rem';
-                tooltip.style.borderRadius = '2rem';
-                tooltip.style.whiteSpace = 'nowrap';
-                tooltip.style.zIndex = '10000';
-                tooltip.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
-                tooltip.style.fontFamily = "'Inter', sans-serif";
-                tooltip.style.border = '1px solid #dbb87c';
-                tooltip.style.pointerEvents = 'none';
-                document.body.appendChild(tooltip);
-                
-                if (window.innerWidth <= 640) {
-                    tooltip.style.whiteSpace = 'normal';
-                    tooltip.style.maxWidth = '260px';
-                    tooltip.style.textAlign = 'center';
-                }
-                
-                this._maybeTooltip = tooltip;
-            });
-            
-            el.addEventListener('mouseleave', function() {
-                if (this._maybeTooltip) {
-                    this._maybeTooltip.remove();
-                    this._maybeTooltip = null;
-                }
-            });
+        // Получаем текст тултипа из атрибута
+        let tooltipText = null;
+        if (target.hasAttribute('data-tooltip')) {
+            tooltipText = target.getAttribute('data-tooltip');
+        } else if (target.hasAttribute('data-absenthint')) {
+            tooltipText = target.getAttribute('data-absenthint');
+        }
+        
+        if (!tooltipText) return;
+        
+        // Удаляем старый псевдоэлемент (через CSS он все равно не позиционируется динамически)
+        // Используем динамическое создание элемента для точного позиционирования
+        let dynamicTooltip = document.getElementById('global-tooltip');
+        if (!dynamicTooltip) {
+            dynamicTooltip = document.createElement('div');
+            dynamicTooltip.id = 'global-tooltip';
+            dynamicTooltip.style.position = 'fixed';
+            dynamicTooltip.style.backgroundColor = '#2f2a24';
+            dynamicTooltip.style.color = '#f7efdf';
+            dynamicTooltip.style.fontSize = '0.8rem';
+            dynamicTooltip.style.fontWeight = '500';
+            dynamicTooltip.style.padding = '0.6rem 1.2rem';
+            dynamicTooltip.style.borderRadius = '2rem';
+            dynamicTooltip.style.zIndex = '10000';
+            dynamicTooltip.style.boxShadow = '0 10px 25px rgba(0,0,0,0.25)';
+            dynamicTooltip.style.fontFamily = "'Inter', sans-serif";
+            dynamicTooltip.style.border = '1px solid #dbb87c';
+            dynamicTooltip.style.pointerEvents = 'none';
+            dynamicTooltip.style.whiteSpace = 'nowrap';
+            document.body.appendChild(dynamicTooltip);
+        }
+        
+        dynamicTooltip.innerText = tooltipText;
+        
+        // Позиционируем над курсором
+        let top = y - 40;
+        let left = x;
+        
+        // Проверяем выход за границы
+        const tooltipRect = dynamicTooltip.getBoundingClientRect();
+        if (top < 10) {
+            top = y + 20;
+        }
+        if (left + (tooltipRect.width / 2) > window.innerWidth - 10) {
+            left = window.innerWidth - (tooltipRect.width / 2) - 10;
+        }
+        if (left - (tooltipRect.width / 2) < 10) {
+            left = (tooltipRect.width / 2) + 10;
+        }
+        
+        dynamicTooltip.style.left = left + 'px';
+        dynamicTooltip.style.top = top + 'px';
+        dynamicTooltip.style.transform = 'translateX(-50%)';
+        dynamicTooltip.style.display = 'block';
+        
+        // Для мобильных
+        if (window.innerWidth <= 640) {
+            dynamicTooltip.style.whiteSpace = 'normal';
+            dynamicTooltip.style.maxWidth = '260px';
+            dynamicTooltip.style.textAlign = 'center';
+            dynamicTooltip.style.lineHeight = '1.4';
+        } else {
+            dynamicTooltip.style.whiteSpace = 'nowrap';
+            dynamicTooltip.style.maxWidth = 'none';
+        }
+    }
+    
+    function hideGlobalTooltip() {
+        const tooltip = document.getElementById('global-tooltip');
+        if (tooltip) {
+            tooltip.style.display = 'none';
+        }
+        if (activeTooltipElement) {
+            document.removeEventListener('mousemove', updateTooltipPosition);
+            activeTooltipElement = null;
+        }
+    }
+    
+    function showTooltipForElement(element, e) {
+        // Скрываем предыдущий
+        hideGlobalTooltip();
+        activeTooltipElement = element;
+        // Обновляем позицию сразу
+        updateTooltipPosition(e);
+        // Добавляем обработчик движения мыши
+        document.addEventListener('mousemove', updateTooltipPosition);
+        // Добавляем обработчик ухода мыши на сам элемент
+        const leaveHandler = function() {
+            hideGlobalTooltip();
+            element.removeEventListener('mouseleave', leaveHandler);
+        };
+        element.addEventListener('mouseleave', leaveHandler);
+    }
+    
+    // Функция для навешивания обработчиков на все элементы с тултипами
+    function bindTooltips() {
+        // Обрабатываем элементы с data-tooltip
+        const tooltipElements = document.querySelectorAll('[data-tooltip], [data-absenthint]');
+        tooltipElements.forEach(el => {
+            // Удаляем старые обработчики, если были
+            el.removeEventListener('mouseenter', el._tooltipHandler);
+            // Создаем новый обработчик
+            const handler = function(e) {
+                e.stopPropagation();
+                showTooltipForElement(this, e);
+            };
+            el._tooltipHandler = handler;
+            el.addEventListener('mouseenter', handler);
         });
     }
-
+    
     function renderRow(seatsArray, containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -818,7 +745,6 @@
             const seatDiv = document.createElement("div");
             seatDiv.className = getSeatClass(guest);
             
-            // Добавляем подсказку для знака вопроса на уголке (только для maybeAbsent)
             if (guest.maybeAbsent) {
                 const fullHint = `${guest.name} — возможно, не придёт. Рекомендуем резерв.`;
                 seatDiv.setAttribute("data-absenthint", fullHint);
@@ -841,7 +767,6 @@
             const roleSpan = document.createElement("span");
             roleSpan.className = "guest-role";
             
-            // Формируем контент роли и tooltip ТОЛЬКО для текста роли
             if (guest.special === "couple") {
                 roleSpan.innerHTML = `<i class="fas fa-heart" style="font-size: 0.55rem;"></i> ` + (guest.name === "ЖЕНИХ" ? "жених" : "невеста");
                 roleSpan.setAttribute("data-tooltip", `${guest.name} — главные гости вечера`);
@@ -867,9 +792,9 @@
             container.appendChild(seatDiv);
         });
         
-        // После рендеринга настраиваем тултипы
+        // После рендеринга привязываем обработчики тултипов
         setTimeout(() => {
-            setupTooltips();
+            bindTooltips();
         }, 50);
     }
 
@@ -877,14 +802,14 @@
     renderRow(bottomSeats, "bottom-row");
 </script>
 
-<!-- дополнительный блок для декоратора -->
 <div class="decorator-note">
     <div style="background: #fffaf2; border-radius: 1rem; padding: 0.8rem 1.2rem; border-left: 4px solid #d4a373; font-size: 0.75rem; color: #5e4b36;">
         <i class="fas fa-info-circle" style="margin-right: 8px; color: #c28a4b;"></i> 
-        <strong>Декоратору:</strong> в плане отмечены гости, которые могут не прийти (Галина Михайловна, Нина Васильевна, Зуля, мама жениха, <strong>Гоша</strong>). 
-        При наведении на значок "?" или текст "возможно, не придёт" появляется полная всплывающая подсказка в элегантном стиле. 
+        <strong>Декоратору:</strong> в плане отмечены гости, которые могут не прийти (Галина Михайловна, Зуля, мама жениха, <strong>Гоша</strong>). 
+        <strong>Нина Васильевна — точно будет.</strong><br>
+        При наведении на значок "?" или текст "возможно, не придёт" появляется всплывающая подсказка. 
         При наведении на остальные строки с ролью гостя также появляется подсказка с именем и ролью.
-        <strong>Исправлено:</strong> тултипы теперь полностью видимые, не обрезаются и не становятся прозрачными.
+        <strong>Исправлено:</strong> тултипы теперь не дублируются, появляются ровно один раз и следуют за курсором.
         Стол накрывается единой скатертью, стыки секций скрыты. Фотозона оформляется по дизайн-проекту невесты. 
         Open kitchen находится слева от стола (зона входа) — гости будут подходить к кулинарной станции. Стулья расставить строго по схеме.
     </div>
