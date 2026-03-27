@@ -578,7 +578,6 @@
 </div>
 
 <script>
-    // Данные: Нина Васильевна теперь точно будет (maybeAbsent: false)
     const topSeats = [
         { name: "Яна", role: "гостья", maybeAbsent: false, special: false },
         { name: "Сергей", role: "гость", maybeAbsent: false, special: false },
@@ -588,7 +587,7 @@
         { name: "Мама невесты", role: "мама", maybeAbsent: false, special: false },
         { name: "Отец", role: "отец", maybeAbsent: false, special: false },
         { name: "Галина Михайловна", role: "бабушка", maybeAbsent: true, special: false },
-        { name: "Нина Васильевна", role: "бабушка", maybeAbsent: false, special: false }  // ТОЧНО БУДЕТ
+        { name: "Нина Васильевна", role: "бабушка", maybeAbsent: false, special: false }
     ];
 
     const bottomSeats = [
@@ -745,11 +744,6 @@
             const seatDiv = document.createElement("div");
             seatDiv.className = getSeatClass(guest);
             
-            if (guest.maybeAbsent) {
-                const fullHint = `${guest.name} — возможно, не придёт. Рекомендуем резерв.`;
-                seatDiv.setAttribute("data-absenthint", fullHint);
-            }
-            
             const numberSpan = document.createElement("span");
             numberSpan.style.fontSize = "0.55rem";
             numberSpan.style.display = "block";
@@ -806,10 +800,9 @@
     <div style="background: #fffaf2; border-radius: 1rem; padding: 0.8rem 1.2rem; border-left: 4px solid #d4a373; font-size: 0.75rem; color: #5e4b36;">
         <i class="fas fa-info-circle" style="margin-right: 8px; color: #c28a4b;"></i> 
         <strong>Декоратору:</strong> в плане отмечены гости, которые могут не прийти (Галина Михайловна, Зуля, мама жениха, <strong>Гоша</strong>). 
-        <strong>Нина Васильевна — точно будет.</strong><br>
         При наведении на значок "?" или текст "возможно, не придёт" появляется всплывающая подсказка. 
         При наведении на остальные строки с ролью гостя также появляется подсказка с именем и ролью.
-        <strong>Исправлено:</strong> тултипы теперь не дублируются, появляются ровно один раз и следуют за курсором.
+        
         Стол накрывается единой скатертью, стыки секций скрыты. Фотозона оформляется по дизайн-проекту невесты. 
         Open kitchen находится слева от стола (зона входа) — гости будут подходить к кулинарной станции. Стулья расставить строго по схеме.
     </div>
